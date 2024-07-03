@@ -1,0 +1,25 @@
+#To test - Typescript 
+version: 2.1
+ 
+jobs:
+  sonar-analysis:
+    docker:
+      - image: sonarsource/sonar-scanner-cli
+ 
+    steps:
+      - checkout
+ 
+      # Run SonarQube Scanner
+      - run:
+          name: Run SonarQube Scanner
+          command: |
+            sonar-scanner \
+              -Dsonar.projectKey=Type-script \
+              -Dsonar.sources=. \
+              -Dsonar.host.url=http://65.1.31.213:9000 \
+              -Dsonar.token=$SONAR_TOKEN
+ 
+workflows:
+  build-and-analyze:
+    jobs:
+      - sonar-analysis
