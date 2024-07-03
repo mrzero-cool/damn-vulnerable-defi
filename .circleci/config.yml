@@ -15,6 +15,7 @@ jobs:
             sonar-scanner \
               -Dsonar.projectKey=Type-script \
               -Dsonar.sources=. \
+              -Dsonar.inclusions=**/* \
               -Dsonar.host.url=http://65.1.31.213:9000 \
               -Dsonar.token=$SONAR_TOKEN
  
