@@ -28,7 +28,7 @@ export const fundErc20 = async (
 };
 
 export const impersonateFundErc20 = async (
-  contract: Contract,
+  contract: any,
   sender: string,
   recepient: string,
   amount: string
