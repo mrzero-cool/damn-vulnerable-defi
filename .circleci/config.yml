@@ -3,6 +3,8 @@ version: 2.1
 jobs:
   # Test and coverage job
   test-and-coverage:
+    docker:
+      - image: circleci/node:latest  # Specify a Docker image
     steps:
       - checkout
 
@@ -25,7 +27,6 @@ jobs:
   sonar-analysis:
     docker:
       - image: sonarsource/sonar-scanner-cli
-
     steps:
       - checkout
 
@@ -38,7 +39,7 @@ jobs:
               -Dsonar.sources=. \
               -Dsonar.inclusions=**/* \
               -Dsonar.host.url=http://65.1.31.213:9000 \
-              -Dsonar.coverage.reportPaths=coverage/lcov.info \  # Added coverage report path
+              -Dsonar.coverage.reportPaths=coverage/lcov.info \
               -Dsonar.token=$SONAR_TOKEN
 
 workflows:
