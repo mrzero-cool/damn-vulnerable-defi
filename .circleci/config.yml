@@ -1,18 +1,17 @@
-#Coverage
+
 version: 2.1
 
 jobs:
-  # Test and coverage job
-  test-and-coverage:
+  # SonarQube analysis (updated with coverage report)
+  sonar-analysis:
     docker:
-      - image: circleci/node:latest  # Specify a Docker image
+      - image: sonarsource/sonar-scanner-cli
     steps:
       - checkout
-
-      # Install dependencies
+            # Install dependencies
       - run:
           name: Install dependencies
-          command: yarn install
+          command: yarn 
 
       # Run tests with coverage reporting
       - run:
@@ -23,14 +22,6 @@ jobs:
       - run:
           name: Upload coverage report
           command: circleci circle-artifact upload --path=coverage.lcov --tag=coverage
-
-  # SonarQube analysis (updated with coverage report)
-  sonar-analysis:
-    docker:
-      - image: sonarsource/sonar-scanner-cli
-    steps:
-      - checkout
-
       # Run SonarQube Scanner
       - run:
           name: Run SonarQube Scanner
@@ -46,7 +37,5 @@ jobs:
 workflows:
   build-and-analyze:
     jobs:
-      - test-and-coverage
-      - sonar-analysis:
-          requires:
-            - test-and-coverage  # Run Sonar analysis after test-and-coverage job completes
+      - sonar-analysis
+
