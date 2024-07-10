@@ -1,0 +1,50 @@
+version: 2.1
+
+jobs:
+  # Test and coverage job
+  test-and-coverage:
+    steps:
+      - checkout
+
+      # Install dependencies
+      - run:
+          name: Install dependencies
+          command: yarn
+
+      # Run tests with coverage reporting
+      - run:
+          name: Run tests with coverage
+          command: yarn jest --coverage
+
+      # Upload coverage report to CircleCI (optional)
+      - run:
+          name: Upload coverage report
+          command: circleci circle-artifact upload --path=coverage.lcov --tag=coverage
+
+  # SonarQube analysis (updated with coverage report)
+  sonar-analysis:
+    docker:
+      - image: sonarsource/sonar-scanner-cli
+
+    steps:
+      - checkout
+
+      # Run SonarQube Scanner
+      - run:
+          name: Run SonarQube Scanner
+          command: |
+            sonar-scanner \
+              -Dsonar.projectKey=Type-script \
+              -Dsonar.sources=. \
+              -Dsonar.inclusions=**/* \
+              -Dsonar.host.url=http://65.1.31.213:9000 \
+              -Dsonar.coverage.reportPaths=coverage/lcov.info \  # Added coverage report path
+              -Dsonar.token=$SONAR_TOKEN
+
+workflows:
+  build-and-analyze:
+    jobs:
+      - test-and-coverage
+      - sonar-analysis:
+          requires:
+            - test-and-coverage  # Run Sonar analysis after test-and-coverage job completes
